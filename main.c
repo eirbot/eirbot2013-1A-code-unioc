@@ -81,7 +81,12 @@ enum gp2 {
   GP2_MAX
 };
 
-#define MUX_GP2_AVANT (ADC_REF_AVCC | MUX_ADC0)
+
+#define MUX_GP2_GAUCHE (ADC_REF_AVCC | MUX_ADC1) // 1er en partant du bas
+#define MUX_GP2_DROITE (ADC_REF_AVCC | MUX_ADC0) // 3e en partant du bas
+#define MUX_GP2_AVANT (ADC_REF_AVCC | MUX_ADC2) // 4e en partant du bas
+// [3] => 5e en partant du bas
+// [4] => 2e en partant du bas
 
 int main(void)
 {
@@ -94,11 +99,10 @@ int main(void)
 	/////////////////////////////////////
 
 	//Initialisations////////////////////
-	//uart_init();
+	uart_init();
 	time_init(128);
-	//fdevopen(uart0_send,NULL, 0);
+	fdevopen(uart0_send,NULL, 0);
 	/***** tip -s 38400 -l /dev/ttyS1 *****/
-	// 6 tr - 25 deg
 
 	//adc_init();
 	DDRE |= 0xf0;
@@ -132,10 +136,46 @@ int main(void)
 	//// Init ADC
 	adc_init();
 
-	//// GP2 Avant
-	gp2_init(&gp2[GP2_AVANT], 15, 50, 150, 2750, 800, 500);
-	
+	//// GP2 Avant Gauche
+	gp2_init(&gp2[GP2_GAUCHE]);
 
+	gp2_add_point(&gp2[GP2_GAUCHE], 150,  500);
+	gp2_add_point(&gp2[GP2_GAUCHE], 120,  600);
+	gp2_add_point(&gp2[GP2_GAUCHE], 100,  700);
+	gp2_add_point(&gp2[GP2_GAUCHE],  80,  850);
+	gp2_add_point(&gp2[GP2_GAUCHE],  70,  900);
+	gp2_add_point(&gp2[GP2_GAUCHE],  60, 1050);
+	gp2_add_point(&gp2[GP2_GAUCHE],  50, 1250);
+	gp2_add_point(&gp2[GP2_GAUCHE],  40, 1500);
+	gp2_add_point(&gp2[GP2_GAUCHE],  30, 2000);
+	gp2_add_point(&gp2[GP2_GAUCHE],  20, 2500);
+
+	// GP2 Avant Droite
+	gp2_init(&gp2[GP2_DROITE]);
+
+	gp2_add_point(&gp2[GP2_DROITE], 150,  500);
+	gp2_add_point(&gp2[GP2_DROITE], 120,  600);
+	gp2_add_point(&gp2[GP2_DROITE], 100,  700);
+	gp2_add_point(&gp2[GP2_DROITE],  80,  850);
+	gp2_add_point(&gp2[GP2_DROITE],  70,  900);
+	gp2_add_point(&gp2[GP2_DROITE],  60, 1050);
+	gp2_add_point(&gp2[GP2_DROITE],  50, 1250);
+	gp2_add_point(&gp2[GP2_DROITE],  40, 1500);
+	gp2_add_point(&gp2[GP2_DROITE],  30, 2000);
+	gp2_add_point(&gp2[GP2_DROITE],  20, 2500);
+
+	// GP2 Avant Millieu
+	gp2_init(&gp2[GP2_AVANT]);
+
+	gp2_add_point(&gp2[GP2_AVANT],  80, 400);
+	gp2_add_point(&gp2[GP2_AVANT],  70, 450);
+	gp2_add_point(&gp2[GP2_AVANT],  60, 550);
+	gp2_add_point(&gp2[GP2_AVANT],  50, 625);
+	gp2_add_point(&gp2[GP2_AVANT],  40, 760);
+	gp2_add_point(&gp2[GP2_AVANT],  30, 975);
+	gp2_add_point(&gp2[GP2_AVANT],  20, 1400);
+	gp2_add_point(&gp2[GP2_AVANT],  10, 2500);
+	
 	// Init de la position
 	position_begin_set(&pos, -140, 100, 0);
 	
@@ -146,9 +186,18 @@ int main(void)
 	while(1){
 	  // Test GP2
 	  uint16_t gp2_av = adc_get_value(MUX_GP2_AVANT);
-	  trajectory_goto_d(&traj, END, -(gp2_get_dist(gp2_av) - 10));
-	  wait_ms(10);
-
+	  printf("%d\n", gp2_get_dist(&gp2[GP2_AVANT], gp2_av));
+	  /*
+	  if(gp2_av > 200 + DELTA)
+	    trajectory_goto_d(&traj, END, -5);
+	  else if(gp2_av < 200 - DELTA)
+	    trajectory_goto_d(&traj, END, 5);
+	  else
+	    printf("OK !");
+	  while(!trajectory_is_ended(&traj));
+	  */
+	  wait_ms(300);
+	  
 	/*  
 	// code de presentation dans la rue : 23/04/13
 	  trajectory_goto_d(&traj, END, 60);
