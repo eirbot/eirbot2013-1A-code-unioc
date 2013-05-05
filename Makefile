@@ -4,7 +4,7 @@ TARGET = main
 AVERSIVE_DIR = ../../../../../aversive/
 
 # List C source files here. (C dependencies are automatically generated.)
-SRC = $(TARGET).c position_manager.c fxx.c asserv_manager.c trajectory_manager.c gp2.c modulo.c
+SRC = $(TARGET).c position_manager.c fxx.c asserv_manager.c trajectory_manager.c gp2.c modulo.c strategie.c verre.c
 
 # List Assembler source files here.
 # Make them always end in a capital .S.  Files ending in a lowercase .s

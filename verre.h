@@ -1,16 +1,18 @@
 #ifndef _VERRE_H_
 #define _VERRE_H_
 
-typedef struct {
-	glass_t glass[12];
-	uint8_t nb_glass_table;
-	uint8_t nb_glass_robot;
-} glass_manager;
+#include <aversive.h>
 
 typedef struct {
 	uint16_t x;
 	uint16_t y;
 } glass_t;
+
+typedef struct {
+	glass_t glass[12];
+	uint8_t nb_glass_table;
+	uint8_t nb_glass_robot;
+} glass_manager;
 
 //initialise l'ensemble des verres sur la table
 void glassManagerInit(glass_manager* gm);

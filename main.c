@@ -185,17 +185,15 @@ int main(void)
 	
 	while(1){
 	  // Test GP2
+	  uint16_t gp2_ga = adc_get_value(MUX_GP2_GAUCHE);
+	  printf("Gauche : %d\n", gp2_get_dist(&gp2[GP2_DROITE], gp2_ga));
+
+	  uint16_t gp2_dr = adc_get_value(MUX_GP2_DROITE);
+	  printf("Droite : %d\n", gp2_get_dist(&gp2[GP2_DROITE], gp2_dr));
+
 	  uint16_t gp2_av = adc_get_value(MUX_GP2_AVANT);
-	  printf("%d\n", gp2_get_dist(&gp2[GP2_AVANT], gp2_av));
-	  /*
-	  if(gp2_av > 200 + DELTA)
-	    trajectory_goto_d(&traj, END, -5);
-	  else if(gp2_av < 200 - DELTA)
-	    trajectory_goto_d(&traj, END, 5);
-	  else
-	    printf("OK !");
-	  while(!trajectory_is_ended(&traj));
-	  */
+	  printf("Milieu : %d\n", gp2_get_dist(&gp2[GP2_AVANT], gp2_av));
+	  
 	  wait_ms(300);
 	  
 	/*  
