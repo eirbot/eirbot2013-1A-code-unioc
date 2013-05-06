@@ -103,9 +103,10 @@ void detection(void *p){
   uint16_t gp2_dr = gp2_get_dist(&gp2[GP2_DROITE],adc_get_value(MUX_GP2_DROITE));	  
   uint16_t gp2_av = gp2_get_dist(&gp2[GP2_AVANT],adc_get_value(MUX_GP2_AVANT));
   if (gp2_ga < 30 || gp2_dr < 30 || gp2_av < 30){
-    printf("Objet detecte --- gauche : %d - centre : %d - droite : %d \n", gp2_ga, gp2_av, gp2_dr);
-	  if (! trajectory_is_paused(&traj))
+    if (!trajectory_is_paused(&traj)) {
+	    printf("Traj not paused\n");
       trajectory_pause(&traj);
+    }
   }else{
     printf("Auncun Objet detecte \n");
     if (trajectory_is_paused(&traj))
@@ -203,7 +204,6 @@ int main(void)
 	gp2_add_point(&gp2[GP2_AVANT],  30, 975);
 	gp2_add_point(&gp2[GP2_AVANT],  20, 1400);
 	gp2_add_point(&gp2[GP2_AVANT],  10, 2500);
-	
 	// Init de la position
 	position_begin_set(&pos, -140, 100, 0);
 	
@@ -255,25 +255,26 @@ int main(void)
 	  */
 
 	  //HOMOLOGATION N°1******************************************************
-	  trajectory_goto_d(&traj, END, 100);
+	  printf("Starting movement\n");
+		trajectory_goto_d(&traj, END, 30);
 	  while(!trajectory_is_ended(&traj));
 	  wait_ms(100);
 	  trajectory_goto_arel(&traj, END, 90);
 	  while(!trajectory_is_ended(&traj));
 	  wait_ms(100);
-	  trajectory_goto_d(&traj, END, 50);
+	  trajectory_goto_d(&traj, END, 30);
 	  while(!trajectory_is_ended(&traj));
 	  wait_ms(100);
 	  trajectory_goto_arel(&traj, END, 90);
 	  while(!trajectory_is_ended(&traj));
 	  wait_ms(100);
-	  trajectory_goto_d(&traj, END, 80);
+	  trajectory_goto_d(&traj, END, 30);
 	  while(!trajectory_is_ended(&traj));
 	  wait_ms(100);
 	  trajectory_goto_arel(&traj, END, 90);
 	  while(!trajectory_is_ended(&traj));
 	  wait_ms(100);
-	  trajectory_goto_d(&traj, END, 50);
+	  trajectory_goto_d(&traj, END, 30);
 	  while(!trajectory_is_ended(&traj));
 	  wait_ms(100);
 	  trajectory_goto_arel(&traj, END, 90);

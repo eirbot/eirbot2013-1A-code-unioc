@@ -1,4 +1,5 @@
 #include "gp2.h"
+#include <uart.h>
 
 void gp2_init(struct gp2_cfg_t* gp2) {
   gp2->size = 0;
@@ -13,20 +14,27 @@ void gp2_init_xya(struct gp2_cfg_t* gp2, int16_t x, int16_t y, int16_t a)
 }
 
 void gp2_add_point(struct gp2_cfg_t* gp2, uint16_t dist, uint16_t volt) {
-  struct dist_adc e = {dist, volt * VOLT2ADC};
+  struct dist_adc e;
+ e.dist = dist;
+ e.adc = volt * VOLT2ADC;
   struct dist_adc tmp;
 
   if(gp2->size >= GP2_SAMPLES)
     return;
 
-  gp2->size++;
   for(int i = 0 ; i < gp2->size ; i++) {
     if(gp2->points[i].adc >= e.adc) {
-	tmp = gp2->points[i];
-	gp2->points[i] = e;
-	e = tmp;
+	tmp.dist = gp2->points[i].dist;
+	tmp.adc = gp2->points[i].adc;
+	gp2->points[i].dist = e.dist;
+	gp2->points[i].adc = e.adc;
+	e.adc = tmp.adc;
+	e.dist = tmp.dist;
     }
   }
+  gp2->points[gp2->size].dist = e.dist;
+  gp2->points[gp2->size].adc = e.adc;
+  gp2->size++;
 }
 
 
