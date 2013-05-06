@@ -10,7 +10,7 @@
 
 //EIRBUG
 
-#define VOLT2ADC (0.2) // coefficient de convertion en 1/V
+#define VOLT2ADC 2/10 // coefficient de convertion en 1/V
 
 #define GP2_SAMPLES (10)
 
