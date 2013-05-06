@@ -1,8 +1,9 @@
 #ifndef _OBSTACLE_H_
 #define _OBSTACLE_H_
-
-enum obstacle_t {RIEN = 0, VERRE, GATEAU, WALL, ROBOT};
-
+#include "tests.h"
+#ifndef TEST
+#include <aversive.h>
+#endif
 /*
    +-> x
    |
@@ -20,6 +21,7 @@ H : assiete
 
 enum figure {RECT, CIRCLE};
 
+typedef struct obstacle obstacle;
 struct obstacle {
   enum figure fig;
   int16_t x;
@@ -42,34 +44,31 @@ struct obstacle {
 #define INFINITE 1000
 
 // Macros Utiles
-#define MK_RECT_WH(x, y, w, h) {RECT, x, y, w, h, 0}
-#define MK_RECT_2P(x1, y1, x2, y2) {RECT, x1, y1, x2 - x1, y2 - y1, 0}
-#define MK_CIRCLE(x, y, r) {RECT, x, y, 0, 0, r}
-
-
-#define MK_ASSIETE_O(i) \ 
-MK_RECT_WH(-TABLE_WIDTH/2 + ASSIETE_DIST_X , ASSIETE_DIST_Y + i * (ASSIETE_DIST_INTER + ASSIETE_W), ASSIETE_W, ASSIETE_W, 0)
-#define MK_ASSIETE_E(i) \
-  MK_RECT_WH(TABLE_WIDTH/2 - (ASSIETE_DIST_X + ASSIETE_W) , ASSIETE_DIST_Y + i * (ASSIETE_DIST_INTER + ASSIETE_W), ASSIETE_W, ASSIETE_W, 0)
+#define MK_RECT_WH(obs, _x, _y, w, h) obs.fig = RECT; obs.x = _x; obs.y = _y; obs.dx = w; obs.dy = h
+#define MK_RECT_2P(obs, x1, y1, x2, y2) obs.fig = RECT; obs.x = x1; obs.y = y1; obs.dx = x2 - x1; obs.dy = y2 - y1
+#define MK_CIRCLE(obs, _x, _y, r) obs.fig = CIRCLE; obs.x = _x; obs.y = _y; obs.dr = r
 
 // Obstacles
-struct obstacle obstacles[] = {
-  //// Murs de la table
-  MK_RECT_2P(-INFINITE, -INFINITE, INFINITE, 0) // Nord
-  {RECT, -INFINITE,                 -INFINITE,    2*INFINITE, INFINITE,   0}, // Nord
-  {RECT, -INFINITE - TABLE_WIDTH/2, -INFINITE,    INFINITE,   2*INFINITE, 0}, // Ouest
-  {RECT, -INFINITE,                 TABLE_HEIGHT, 2*INFINITE, INFINITE,   0}, // Sud
-  {RECT, TABLE_WIDTH/2,             -INFINITE,    INFINITE,   2*INFINITE, 0}, // Est
-  //// Gateau
-  MK_CIRCLE(0, 0, GATEAU_RAY)
-  //// Assietes
-  //OSEF !
+enum obstacle_id {
+  NORTH_BOUND,
+  OUEST_BOUND,
+  SOUTH_BOUND,
+  EAST_BOUND,
+  CAKE,
+
+  MAX_OBSTACLE
 };
 
-//retourne 1 si l'obstacle vu est un obstacle connu du plateau 0 sinon, retourne par effet de bord le type de l'objet
-obstacle_t knownObstacle(int16_t x, int16_t y, int16_t a);
+extern obstacle obstacles[MAX_OBSTACLE];
 
 
+void init_obstacle(void);
+
+// TODO: les fonctions sont à faire !!!
+
+uint8_t known_obstacle(int16_t x, int16_t y);
+
+uint8_t is_obstacle(obstacle* obs, int16_t x, int16_t y);
 
 
 #endif //_OBSTACLE_H_

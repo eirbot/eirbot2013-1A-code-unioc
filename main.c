@@ -33,6 +33,8 @@
 
 #include "gp2.h"
 
+#include "strategie.h"
+
 
 #define LARGEUR_ROBOT 30.0
 #define get_fdc 0x16
@@ -73,14 +75,11 @@ int8_t RECULE=0;
 //int8_t Launch_bis=0;
 //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\//
 
-enum gp2 {
-  GP2_AVANT,
-  GP2_GAUCHE,
-  GP2_DROITE,
-  GP2_ARRIERE,
-  GP2_MAX
-};
-
+//donner des ordres à la carte meca
+#define DEPOSER 0
+#define DEUX_PILES 1
+#define QUESTION_VERRE_RECUP 2
+#define COMBIEN_VERRES 3
 
 #define MUX_GP2_GAUCHE (ADC_REF_AVCC | MUX_ADC1) // 1er en partant du bas
 #define MUX_GP2_DROITE (ADC_REF_AVCC | MUX_ADC0) // 3e en partant du bas
@@ -88,11 +87,38 @@ enum gp2 {
 // [3] => 5e en partant du bas
 // [4] => 2e en partant du bas
 
+
+// Init des GP2
+struct gp2_cfg_t gp2[GP2_MAX];
+
+
+
+//*** a supprimer ***//
+//variable globale pour detection
+//uint8_t trajectory_is_pause = 0;
+//***
+
+void detection(void *p){
+  uint16_t gp2_ga = gp2_get_dist(&gp2[GP2_GAUCHE],adc_get_value(MUX_GP2_GAUCHE));
+  uint16_t gp2_dr = gp2_get_dist(&gp2[GP2_DROITE],adc_get_value(MUX_GP2_DROITE));	  
+  uint16_t gp2_av = gp2_get_dist(&gp2[GP2_AVANT],adc_get_value(MUX_GP2_AVANT));
+  if (gp2_ga < 30 || gp2_dr < 30 || gp2_av < 30){
+    printf("Objet detecte --- gauche : %d - centre : %d - droite : %d \n", gp2_ga, gp2_av, gp2_dr);
+	  if (! trajectory_is_paused(&traj))
+      trajectory_pause(&traj);
+  }else{
+    printf("Auncun Objet detecte \n");
+    if (trajectory_is_paused(&traj))
+      trajectory_resume(&traj);
+  }
+}
+
 int main(void)
 {
 	//Declaration des variables//////////
 	position_manager_t pos; 
 	asserv_manager_t asserv;
+	
 
 	int i = 0;
 
@@ -123,15 +149,17 @@ int main(void)
 	sbi(PORTE,3);
 	wait_ms(100);
  
+	//init des interruptions (detection)
 	scheduler_init();
+	scheduler_add_periodical_event(detection, NULL, 50000/SCHEDULER_UNIT);
+
+
 	position_init(&pos);
 	asserv_init(&asserv,&pos);
 	trajectory_init(&traj,&pos,&asserv);
-	//i2cm_init();
+	i2cm_init();
 	sei();  // autorise les interruptions
 
-	// Init des GP2
-	struct gp2_cfg_t gp2[GP2_MAX];
 
 	//// Init ADC
 	adc_init();
@@ -184,6 +212,35 @@ int main(void)
 	////////////////////
 	
 	while(1){
+	  /*
+	  //Test i2c
+	  uint8_t slave_addr = 2;
+	  uint8_t size_data = 8;
+	  uint8_t ordre = DEUX_PILES;
+	  i2cm_send(slave_addr, size_data, &ordre);
+	  //**on se déplace jusqu'à un verre** 
+	  //on demande à la carte meca si bien reçu (1 = reçu, 0 = non..)
+	  ordre = QUESTION_VERRE_RECUP;
+	  i2cm_send(slave_addr, size_data, &ordre);
+	  int bool_verre_attrape = i2cm_rcv_single(slave_addr);
+	  printf("Verre recu ? : %d \n", bool_verre_attrape);
+	  //combien de verres en tout?
+	  ordre = COMBIEN_VERRES;
+	  i2cm_send(slave_addr, size_data, &ordre);
+	  uint8_t nbr_verres;
+	  uint8_t tmp;
+	  ordre = mecaBusy;
+	  while (ordre != mecaReady){
+	    i2cm_rcv(slave_addr, size_data, &nbr_verres);
+	    if (ordre != mecaReady)
+	      tmp = ordre;
+	    wait_ms(50);
+	  }
+	  nbr_verres = tmp;
+	  printf("Combien de verres en tout ? : %d \n", nbr_verres);
+	  */
+
+	  /*
 	  // Test GP2
 	  uint16_t gp2_ga = adc_get_value(MUX_GP2_GAUCHE);
 	  printf("Gauche : %d\n", gp2_get_dist(&gp2[GP2_DROITE], gp2_ga));
@@ -195,6 +252,40 @@ int main(void)
 	  printf("Milieu : %d\n", gp2_get_dist(&gp2[GP2_AVANT], gp2_av));
 	  
 	  wait_ms(300);
+	  */
+
+	  //HOMOLOGATION N°1******************************************************
+	  trajectory_goto_d(&traj, END, 100);
+	  while(!trajectory_is_ended(&traj));
+	  wait_ms(100);
+	  trajectory_goto_arel(&traj, END, 90);
+	  while(!trajectory_is_ended(&traj));
+	  wait_ms(100);
+	  trajectory_goto_d(&traj, END, 50);
+	  while(!trajectory_is_ended(&traj));
+	  wait_ms(100);
+	  trajectory_goto_arel(&traj, END, 90);
+	  while(!trajectory_is_ended(&traj));
+	  wait_ms(100);
+	  trajectory_goto_d(&traj, END, 80);
+	  while(!trajectory_is_ended(&traj));
+	  wait_ms(100);
+	  trajectory_goto_arel(&traj, END, 90);
+	  while(!trajectory_is_ended(&traj));
+	  wait_ms(100);
+	  trajectory_goto_d(&traj, END, 50);
+	  while(!trajectory_is_ended(&traj));
+	  wait_ms(100);
+	  trajectory_goto_arel(&traj, END, 90);
+	  while(!trajectory_is_ended(&traj));
+	  wait_ms(100);
+	  
+
+	  
+
+
+
+
 	  
 	/*  
 	// code de presentation dans la rue : 23/04/13

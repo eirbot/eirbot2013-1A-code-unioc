@@ -1,10 +1,13 @@
+#####################################################################
+# DEFAULT AVERSIVE
+
 TARGET = main
 
 # repertoire des modules
 AVERSIVE_DIR = ../../../../../aversive/
 
 # List C source files here. (C dependencies are automatically generated.)
-SRC = $(TARGET).c position_manager.c fxx.c asserv_manager.c trajectory_manager.c gp2.c modulo.c strategie.c verre.c
+SRC = $(TARGET).c position_manager.c fxx.c asserv_manager.c trajectory_manager.c gp2.c modulo.c strategie.c verre.c obstacle.c
 
 # List Assembler source files here.
 # Make them always end in a capital .S.  Files ending in a lowercase .s
@@ -19,3 +22,18 @@ ASRC =
 
 -include .aversive_conf
 include $(AVERSIVE_DIR)/mk/aversive_project.mk
+
+
+#######################################################################
+# TESTS EIRBUG
+
+TEST_CC=gcc
+TEST_FLAGS=-std=c99 -D TEST
+TEST_LIBS=-lm
+
+TEST_OBJS=gp2 verre
+
+tests: $(addsuffix .test,$(TEST_OBJS))
+
+%.test : %.c tests/%_tests.c
+	$(TEST_CC) -o $@ $^ $(TEST_FLAGS) $(TEST_LIBS)

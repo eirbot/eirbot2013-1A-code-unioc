@@ -5,6 +5,9 @@
 
 #include "verre.h"
 #include "position_manager.h"
+#include "obstacle.h"
+#include "evitement.h"
+#include "gp2.h"
 
 #define OTHER_ROBOTS 3
 
@@ -14,7 +17,6 @@ enum strategie_mode {
   SEARCH_RANDOM_MODE,
   GO_BACK_MODE,
   PUT_STACK_MODE,
-
 
   MAX_MODE
 };
@@ -33,40 +35,34 @@ enum gp2 {
   GP2_MAX
 };
 
-struct pos {
-  uint16_t x;
-  uint16_t y;
-  uint16_t a;
-};
-
-struct objectif {
-  struct pos target;
-  struct objectif* next;
-};
-
 struct strategie {
+  struct gp2_cfg_t* gp2[GP2_MAX]; 
   // Cote de depart
   enum cote side;
   // Position actuelle
   position_manager_t pos;
   // Dernière position des autres robots
-  struct pos other[OTHER_ROBOTS];
+  struct obstacle other[OTHER_ROBOTS];
   // Dernière date de détection
   uint32_t last_seen[OTHER_ROBOTS];
   uint32_t cur_date;
   // Position de départ des verres
   glass_manager gm;
   // Objectif
-  struct objectif* cur_objectif;
+  chemin* cur_objectif;
+  // Mode de strategie
+  enum strategie_mode mode;
 };
 
 #define bool uint8_t
+#define TRUE 1
+#define FALSE 0
 
 // Initialisation
 void strategie_init(struct strategie* strat, enum cote beg);
 
 // Donne le prochain endroit où aller
-void strategie_where(struct strategie* strat, uint16_t* x, uint16_t* y);
+void strategie_where(struct strategie* strat, uint16_t* x, uint16_t* y, uint16_t* a);
 
 // Dit si le prochain objectif a été atteint
 bool strategie_arrived(struct strategie* strat);

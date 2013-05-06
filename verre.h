@@ -1,11 +1,13 @@
 #ifndef _VERRE_H_
 #define _VERRE_H_
-
+#include "tests.h"
+#ifndef TEST
 #include <aversive.h>
+#endif
 
 typedef struct {
-	uint16_t x;
-	uint16_t y;
+	int16_t x;
+	int16_t y;
 } glass_t;
 
 typedef struct {
@@ -19,7 +21,7 @@ void glassManagerInit(glass_manager* gm);
 //prends un verre de la table et retourne le nombre de verre maintenant stocke
 uint8_t takeGlass(glass_manager* gm, glass_t* gt);
 //trouve le verre le plus proche de notre position actuelle
-glass_t* findClosest(glass_manager* gm, uint16_t x, uint16_t y);
+glass_t* findClosest(glass_manager* gm, int16_t x, int16_t y);
 //supprime un verre de la liste, car celui ci n'est plus positionné correctement  ou a été déplacé
 void removeGlass(glass_manager* gm, glass_t* gt);
 

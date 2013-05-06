@@ -10,6 +10,11 @@
 #include "unioc_config.h"
 //#include "notification_manager.h"
 #include "fxx.h"
+struct pos {
+  int16_t x;
+  int16_t y;
+  int16_t a;
+};
 
 typedef struct 
 {
