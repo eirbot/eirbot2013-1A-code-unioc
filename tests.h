@@ -11,6 +11,28 @@
 #define uint8_t unsigned char
 #define int8_t signed char
 
+
+// Dans position_manager.h
+struct pos {
+  int16_t x;
+  int16_t y;
+  int16_t a;
+};
+
+
+// STD LIB
+#define NULL ((void*)0)
+
+#include <stdio.h>
+
 #endif//TEST_H
 
-#endif
+#else
+
+#include <uart.h>
+
+#endif // TESTS
+
+#define PRINT_DBG(...)			\
+  printf(__VA_ARGS__)
+

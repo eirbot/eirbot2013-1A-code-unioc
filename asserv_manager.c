@@ -50,18 +50,18 @@ void asserv_init_gain(asserv_manager_t * t)
   pid_set_out_shift(&t->pid_distance, 8);//8
 
 
-  pid_set_gains(&t->pid_angle, 100, 15, 800);//170,10,800
+  pid_set_gains(&t->pid_angle, 100, 15, 100);//170,10,800
   pid_set_maximums(&t->pid_angle, 0, 1000, 1500);//0,1000,1500
   pid_set_out_shift(&t->pid_angle, 9);//9
 
 
   //pid_set_derivate_filter(&t->pid_distance,4);
 
-  quadramp_set_2nd_order_vars(&t->qramp_distance, 6, 6 ) ;//3,3
+  quadramp_set_2nd_order_vars(&t->qramp_distance, 3,  ) ;//3,3
   quadramp_set_1st_order_vars(&t->qramp_distance, 70, 70);//80,80
 
-  quadramp_set_2nd_order_vars(&t->qramp_angle, 6, 6);//4,4
-  quadramp_set_1st_order_vars(&t->qramp_angle, 400, 400);//400,400
+  quadramp_set_2nd_order_vars(&t->qramp_angle, 3,3);
+  quadramp_set_1st_order_vars(&t->qramp_angle, 70,70);//400,400
 
 
 }

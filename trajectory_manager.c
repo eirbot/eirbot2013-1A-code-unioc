@@ -572,16 +572,58 @@ void trajectory_goto_xy_pion_backward(trajectory_manager_t *t,trajectory_order_w
 int8_t trajectory_goto_pos(trajectory_manager_t* t, trajectory_order_when_t when, int16_t x, int16_t y, int16_t a) {
   int16_t actual_pos_x,actual_pos_y,actual_pos_a;
   position_abs(t->pm, &actual_pos_x, &actual_pos_y, &actual_pos_a);
-  x -= actual_pos_x;
-  y -= actual_pos_y;
-  y = -y;
+  x = actual_pos_x-x;
+  y = actual_pos_y-y;
+  //y = -y;
+  double x2 = (double)x*(double)x;
+  double y2 = (double)y*(double)y;
   //a = ( a - actual_pos_a + 360)%360; // Euuhh.. à supprimer
 
-  double ia = atan2((double)y,(double)x)*180/M_PI - actual_pos_a;
-  double d = sqrt(x*x + y*y);
-  double fa = (double)a;
+  //printf("actual_pos_a = %d", actual_pos_a);
+  printf("X = %d, Y = %d, x2 = %lf, y2 = %lf\n", x, y, x2, y2);
+
+  double ia = (atan2((double)y,(double)x))*180/M_PI - actual_pos_a;
+  double d = sqrt(x2 + y2);// attention risque overflow
+  //double fa = ia - (double)a - (double)actual_pos_a;
+  double fa = (double)a - (double)actual_pos_a;
+
+  printf("ia = %lf, d = %lf, fa = %lf", ia, d, fa);
+
+  if(when == NOW) {
+    printf("PAS CONSEILLE !");
+    trajectory_goto_a(t, when, fa);
+    trajectory_goto_d(t, when, d);
+    trajectory_goto_arel(t, when, ia);
+  }
 
   trajectory_goto_arel(t, when, ia);
   trajectory_goto_d(t, when, d);
   trajectory_goto_a(t, when, fa);
+}
+
+int8_t trajectory_goto_pos_wa(trajectory_manager_t* t, trajectory_order_when_t when, int16_t x, int16_t y) {
+  int16_t actual_pos_x,actual_pos_y,actual_pos_a;
+  position_abs(t->pm, &actual_pos_x, &actual_pos_y, &actual_pos_a);
+  x = actual_pos_x-x;
+  y = actual_pos_y-y;
+  //y = -y;
+  double x2 = (double)x*(double)x;
+  double y2 = (double)y*(double)y;
+  //a = ( a - actual_pos_a + 360)%360; // Euuhh.. à supprimer
+
+  //printf("actual_pos_a = %d", actual_pos_a);
+  printf("X = %d, Y = %d, x2 = %lf, y2 = %lf\n", x, y, x2, y2);
+
+  double ia = (atan2((double)y,(double)x))*180/M_PI - actual_pos_a;
+  double d = sqrt(x2 + y2);// attention risque overflow
+  //double fa = ia - (double)a - (double)actual_pos_a;
+
+  if(when == NOW) {
+    printf("PAS CONSEILLE !");
+    trajectory_goto_d(t, when, d);
+    trajectory_goto_arel(t, when, ia);
+  }
+
+  trajectory_goto_arel(t, when, ia);
+  trajectory_goto_d(t, when, d);
 }

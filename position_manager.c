@@ -7,9 +7,18 @@
 
 // EIRBUG
 void position_abs(position_manager_t* pm, int16_t* x, int16_t* y, int16_t* a) {
-	*x = pm->acs_x_begin + fxx_to_double(position_get_x_cm(pm));
-        *y = pm->acs_y_begin - fxx_to_double(position_get_y_cm(pm));
-	*a = pm->acs_angle_begin + fxx_to_double(position_get_angle_mod2pi_deg(pm));	
+  if(pm->acs_angle_begin == 0) {  
+    *x = pm->acs_x_begin - fxx_to_double(position_get_x_cm(pm));
+    *y = pm->acs_y_begin - fxx_to_double(position_get_y_cm(pm));
+  }	
+  else{
+    *x = pm->acs_x_begin + fxx_to_double(position_get_x_cm(pm));
+    *y = pm->acs_y_begin + fxx_to_double(position_get_y_cm(pm));
+  }	
+	*a = pm->acs_angle_begin + fxx_to_double(position_get_angle_mod2pi_deg(pm));   
+	printf("position de départ, %d, %d , %d\n", pm->acs_x_begin, pm->acs_y_begin, pm->acs_angle_begin);
+	
+
 }
 
 

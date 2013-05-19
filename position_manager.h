@@ -3,8 +3,8 @@
 
 #define ROBOT_PM_UPDATE_TIME 15000
 
-#define ROBOT_IMP_PI (49270.0/5.7) // (49270.0/5.824) 
-#define ROBOT_IMP_CM 110.4     //110.6
+#define ROBOT_IMP_PI (49270.0/6.025) //(48730/5.870) //(49270.0/5.870) // (49270.0/5.824) 
+#define ROBOT_IMP_CM 109.2 //110.4
 
 #include <aversive.h>
 #include "unioc_config.h"

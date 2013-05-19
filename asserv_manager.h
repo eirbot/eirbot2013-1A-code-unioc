@@ -12,7 +12,7 @@
 #include  "quadramp.h"
 #include  <control_system_manager.h>
 // Distance entre les deux codeurs
-#define   MOT_TRACK_CM (16.75) //(26.15)
+#define   MOT_TRACK_CM (26.15) //(16.75)
 #define TOLERANCE_DERAPAGE 1.0
 #define RAPPORT_STATIC_DERAPAGE 2.1504
 

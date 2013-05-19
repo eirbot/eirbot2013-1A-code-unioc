@@ -41,7 +41,7 @@ void gp2_add_point(struct gp2_cfg_t* gp2, uint16_t dist, uint16_t volt) {
 uint16_t gp2_get_dist(struct gp2_cfg_t* gp2, uint16_t adc) {
   for(int i = 0 ; i < gp2->size ; i++) {
     if(gp2->points[i].adc >= adc) {
-      return gp2->points[i].dist;
+      return gp2->points[i].dist + 10;
     }
   }
   return 0;
@@ -49,7 +49,7 @@ uint16_t gp2_get_dist(struct gp2_cfg_t* gp2, uint16_t adc) {
 
 void gp2_get_obstacle(struct gp2_cfg_t* gp2, uint16_t adc, int16_t* x, int16_t* y, int16_t* a)
 {
-  uint16_t dist = gp2_get_dist(gp2, adc);
+  uint16_t dist = adc;
   //*x = gp2->x + cos(((float)gp2->a*3.14)/180.)*dist;
   //*y = gp2->y + sin(((float)gp2->a*3.14)/180.)*dist;
   if(gp2->a == 180 || gp2->a == -180)

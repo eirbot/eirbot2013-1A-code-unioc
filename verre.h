@@ -3,6 +3,7 @@
 #include "tests.h"
 #ifndef TEST
 #include <aversive.h>
+#include <uart.h>
 #endif
 
 typedef struct {

@@ -10,7 +10,7 @@
 #include "gp2.h"
 
 #define OTHER_ROBOTS 3
-
+#define TIMER_FORGET 4000
 // 
 enum strategie_mode {
   SEARCH_GLASS_MODE,
@@ -39,9 +39,7 @@ struct strategie {
   struct gp2_cfg_t* gp2[GP2_MAX]; 
   // Cote de depart
   enum cote side;
-  // Position actuelle
-  position_manager_t pos;
-  // Dernière position des autres robots
+ // Dernière position des autres robots
   struct obstacle other[OTHER_ROBOTS];
   // Dernière date de détection
   uint32_t last_seen[OTHER_ROBOTS];
@@ -52,17 +50,22 @@ struct strategie {
   chemin* cur_objectif;
   // Mode de strategie
   enum strategie_mode mode;
+  glass_t* verre;
+  // Position actuelle
+  position_manager_t pos;
 };
 
 #define bool uint8_t
 #define TRUE 1
 #define FALSE 0
+#define ROBOT_RAYON 25
 
 // Initialisation
 void strategie_init(struct strategie* strat, enum cote beg);
-
+void robot_evitement(struct strategie* strat, int16_t x, int16_t y, int16_t a);
+uint8_t robot_obstacle(struct strategie* strat, int16_t x, int16_t y);
 // Donne le prochain endroit où aller
-void strategie_where(struct strategie* strat, uint16_t* x, uint16_t* y, uint16_t* a);
+void strategie_where(struct strategie* strat, int16_t* x, int16_t* y, int16_t* a);
 
 // Dit si le prochain objectif a été atteint
 bool strategie_arrived(struct strategie* strat);
@@ -76,5 +79,8 @@ void strategie_update_meca(struct strategie* strat);
 
 // Cherche le prochain objectif
 void strategie_fetch(struct strategie* strat);
+
+// Edit the color
+void strategie_set_color(struct strategie* strat, enum cote side);
 
 #endif//STRATEGIE_H

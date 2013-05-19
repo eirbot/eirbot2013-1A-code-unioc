@@ -2,8 +2,6 @@
 
 obstacle obstacles[MAX_OBSTACLE];
 
-// TODO !!!!
-
 void init_obstacle() {
   //// Murs de la table
   MK_RECT_2P(obstacles[NORTH_BOUND], -INFINITE, -INFINITE, INFINITE, 0);
@@ -21,8 +19,8 @@ uint8_t known_obstacle(int16_t x, int16_t y) {
   uint8_t ret = 0;
 
   for(uint8_t i = 0; i < MAX_OBSTACLE; i++) {
-    if(ret==0)    
-      ret= is_obstacle(&obstacles[i], x, y);
+    if(ret = is_obstacle(&obstacles[i], x, y))
+		return ret;
   }
   
   return ret;
@@ -30,12 +28,12 @@ uint8_t known_obstacle(int16_t x, int16_t y) {
 
 uint8_t is_obstacle(obstacle* obs, int16_t x, int16_t y) {
   if(obs->fig == RECT) {
-    return (obs->x <= x) && (x <= obs->x + obs->dx) && (obs->y <= y) && (y <= obs->y + obs->dy);
+    return ((obs->x <= x) && (x <= obs->x + obs->dx) && (obs->y <= y) && (y <= obs->y + obs->dy))*2;
   }
   else if(obs->fig == CIRCLE) {
     int16_t _x = obs->x - x;
     int16_t _y = obs->y - y;
-    return (_x*_x + _y*_y) <=obs->dr*obs->dr;
+    return (_x*_x + _y*_y) <= obs->dr*obs->dr;
   }
 
   return 0;

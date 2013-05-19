@@ -42,12 +42,14 @@ struct obstacle {
 #define ASSIETE_DIST_INTER (60 - 25 - ASSIETE_W)
 
 #define INFINITE 1000
+#define OBS_DODGE 1
+#define OBS_IGNORE 2
 
 // Macros Utiles
 #define MK_RECT_WH(obs, _x, _y, w, h) obs.fig = RECT; obs.x = _x; obs.y = _y; obs.dx = w; obs.dy = h
 #define MK_RECT_2P(obs, x1, y1, x2, y2) obs.fig = RECT; obs.x = x1; obs.y = y1; obs.dx = x2 - x1; obs.dy = y2 - y1
 #define MK_CIRCLE(obs, _x, _y, r) obs.fig = CIRCLE; obs.x = _x; obs.y = _y; obs.dr = r
-
+#define MK_COPY(obs1,obs2) obs1.fig = obs2.fig; obs1.x = obs2.x ; obs1.y = obs2.y ; obs1.dr = obs2.dr
 // Obstacles
 enum obstacle_id {
   NORTH_BOUND,

@@ -97,6 +97,7 @@ void trajectory_init(trajectory_manager_t *,position_manager_t *,asserv_manager_
 
 //EIRBUG
 int8_t trajectory_goto_pos(trajectory_manager_t*, trajectory_order_when_t when, int16_t x, int16_t y, int16_t a);
+int8_t trajectory_goto_pos_wa(trajectory_manager_t*, trajectory_order_when_t when, int16_t x, int16_t y);
 ////
 
 int8_t trajectory_goto_d(trajectory_manager_t *,trajectory_order_when_t when,double d);
