@@ -15,7 +15,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- *  Revision : $Id: uart_config.h,v 1.3.12.1 2008-02-17 15:24:23 zer0 Exp $
+ *  Revision : $Id: uart_config.h,v 1.3 2005-11-07 23:23:34 zer0 Exp $
  *
  */
 
@@ -37,7 +37,7 @@
 #define UART0_ENABLED  1
 
 /* enable uart0 interrupts if == 1, disable if == 0 */
-#define UART0_INTERRUPT_ENABLED  0
+#define UART0_INTERRUPT_ENABLED  1
 
 #define UART0_BAUDRATE 38400
 

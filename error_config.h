@@ -15,7 +15,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- *  Revision : $Id: error_config.h,v 1.4.8.1 2008-02-17 15:24:24 zer0 Exp $
+ *  Revision : $Id: error_config.h,v 1.4 2006-02-21 23:05:18 zer0 Exp $
  *
  */
 

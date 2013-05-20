@@ -15,7 +15,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- *  Revision : $Id: pwm_config.h,v 1.1.4.2 2006-10-03 00:18:35 enseirb Exp $
+ *  Revision : $Id: pwm_config.h,v 1.4 2008-01-08 20:05:04 zer0 Exp $
  *
  */
 
@@ -33,6 +33,8 @@
 #ifndef _PWM_CONFIG_
 #define _PWM_CONFIG_
 
+#define _PWM_CONFIG_VERSION_ 2
+
 /* Which PWM are enabled ? */
 //#define PWM0_ENABLED
 #define PWM1A_ENABLED
@@ -49,16 +51,16 @@
 
 // timer configs (not all possibilities can be used at this time)
 #define TIMER0_MODE     TIMER_8_MODE_PWM
-#define TIMER0_PRESCALE TIMER_8_PRESCALE_64
+#define TIMER0_PRESCALE TIMER0_PRESCALER_DIV_64
 
 #define TIMER1_MODE     TIMER_16_MODE_PWM_10
-#define TIMER1_PRESCALE TIMER_16_PRESCALE_8
+#define TIMER1_PRESCALE TIMER1_PRESCALER_DIV_8
 
 #define TIMER2_MODE     TIMER_8_MODE_PWM
-#define TIMER2_PRESCALE TIMER_8_PRESCALE_64
+#define TIMER2_PRESCALE TIMER1_PRESCALER_DIV_64
 
 #define TIMER3_MODE     TIMER_16_MODE_PWM_10
-#define TIMER3_PRESCALE TIMER_16_PRESCALE_8
+#define TIMER3_PRESCALE TIMER3_PRESCALER_DIV_8
 
 
 
@@ -77,7 +79,7 @@ PWM_SPECIAL_SIGN_MODE : if defined, the pwm is always near 0 for low values,
                         else negative low values are near 100%
 
 
-the values of PWMxx_SIGN_PORT and PWMxx_SIGN_BIT are simply ignored if the PWM is not signed, but must be defined
+the values of PWMxx_SIGN_PORT and PWMxx_SIGN_BIT are simply ignored if the PWM is not signed
 
 
 if you need for example a PWM1A with special sign mode you configure like this : 

@@ -1,15 +1,13 @@
 
 
 #include <aversive.h>
-#include <wait.h>
+#include <aversive/wait.h>
 #include <time.h>
 #include <uart.h>
 #include <scheduler.h>
-#include <i2cm.h>
 #include <adc.h>
 #include <math.h>
 #include "unioc_config.h"
-#include "com.h"
 #include "position_manager.h"
 #include "asserv_manager.h"
 #include "trajectory_manager.h"
@@ -34,7 +32,7 @@
 // Prototypes //////////////////////////////////////////
 void init_couleur_depart(void);
 void initCom(void);
-uint8_t mecaCom(uint8_t ordre);
+//uint8_t mecaCom(uint8_t ordre);
 int8_t get_FdCourse_avant(void);
 int8_t get_FdCourse_arriere(void);
 void rdsInit(void);
@@ -140,7 +138,7 @@ int main(void)
 	//Initialisations////////////////////
 	uart_init();
 	time_init(128);
-	fdevopen(uart0_send,NULL, 0);
+	//fdevopen(uart0_send,NULL, 0);
 	/***** tip -s 38400 -l /dev/ttyS1 *****/
 
 	//adc_init();
@@ -172,7 +170,7 @@ int main(void)
 	position_init(&pos);
 	asserv_init(&asserv,&pos);
 	trajectory_init(&traj,&pos,&asserv);
-	i2cm_init();
+	//i2cm_init();
 	sei();  // autorise les interruptions
 #endif
 
@@ -252,7 +250,7 @@ int main(void)
 	asserv_init(&asserv,&(strat.pos));
 	wait_ms(100);
 	trajectory_init(&traj,&(strat.pos),&asserv);
-	i2cm_init(); // 
+	//i2cm_init(); // 
 	sei();  // autorise les interruptions
 	//trajectory_goto_d(&traj, NOW, 2);
 	//while(!trajectory_is_ended(&traj));
@@ -288,9 +286,9 @@ int main(void)
 
 	  wait_ms(100);
 strategie_fetch(&strat);
-	  mecaCom(MECA_START);
+	  //mecaCom(MECA_START);
 	    
-	mecaCom(MONTER); //test
+	//mecaCom(MONTER); //test
 #endif//MAIN
 
 
@@ -347,16 +345,16 @@ while(1);}
 
 
 		printf("Nouveau verre\n");
-		mecaCom(SORTIR_RABBATEUR);
-		mecaCom(RENTRER_RABBATEUR);
-		mecaCom(DESCENDRE_SUR_VERRE);
-		mecaCom(FERMER_GAUCHE);
+		//mecaCom(SORTIR_RABBATEUR);
+		//mecaCom(RENTRER_RABBATEUR);
+		//mecaCom(DESCENDRE_SUR_VERRE);
+		//mecaCom(FERMER_GAUCHE);
 		//mode triche
 		if(strat.verre != NULL)
 		takeGlass(&(strat.gm), strat.verre);
 		//fin du mode triche
 	  	if(strat.gm.nb_glass_robot < 4) { 
-			mecaCom(MONTER);
+			//mecaCom(MONTER);
 		}
 		strategie_fetch(&strat);}
 		  
@@ -367,7 +365,7 @@ while(1);}
 	    if(strat.side == COTE_BLEU)
 	    trajectory_goto_pos_wa(&traj, END, 125, 100+01*comptour);
 	    while(!trajectory_is_ended(&traj));
-		mecaCom(DEPOSER);
+		//mecaCom(DEPOSER);
 	    goto_d_back_detection(&traj, -30);
 	    while(!trajectory_is_ended(&traj));
 	    //trajectory_goto_pos_wa(&traj, END, 0, 100);
@@ -411,7 +409,7 @@ while(1);}
 #ifdef MATCH // FAIIIILLL
 	  // Début, mettre la droite du robot en face des verres les plus à droite. 
 
-	  mecaCom(ATTRAPER_VERRES);
+	  //mecaCom(ATTRAPER_VERRES);
 
 	  //Démarrage en douceur
 	  quadramp_set_2nd_order_vars(&asserv.qramp_distance,3,3);
@@ -432,7 +430,7 @@ while(1);}
 
 	  // Distance parcourue : 75
 
-	  //mecaCom(FERMER_DROITE);
+	  ////mecaCom(FERMER_DROITE);
 
 	  // Deviation pour mettre le 2e verre à gauche
 	  trajectory_goto_arel(&traj, END, -8);
@@ -444,7 +442,7 @@ while(1);}
 	  while(!trajectory_is_ended(&traj));
 	  wait_ms(100);
 
-	  //mecaCom(FERMER_GAUCHE);
+	  ////mecaCom(FERMER_GAUCHE);
 
 	  // Déviation dans l'autre sens pour se remettre droit
 	  trajectory_goto_arel(&traj, END, 8);
@@ -481,7 +479,7 @@ while(1);}
 	  AVANCE = 0;
 	  //// Distance parcourue : 100 cm !
 
-	  mecaCom(DEPOSER);
+	  //mecaCom(DEPOSER);
 
 	  // On reculepour laisser les verres DANS NOTRE CAMP DE PREFERRENCE
 	  RECULE = 1;
@@ -490,7 +488,7 @@ while(1);}
 	  wait_ms(100);
 	  RECULE = 0;
 	  
-	  mecaCom(ATTRAPER_VERRES);
+	  //mecaCom(ATTRAPER_VERRES);
 
 
 	  // On se retourne
@@ -533,7 +531,7 @@ while(1);}
 	  AVANCE = 0;
 	  // Distance parcourue : 110 cm !
 
-	  mecaCom(DEPOSER);
+	  //mecaCom(DEPOSER);
 
 	  // On recule pour laisser les verres dans notre camp de préferrence
 	  RECULE = 1;
@@ -542,7 +540,7 @@ while(1);}
 	  wait_ms(100);
 	  RECULE = 0;
 
-	  mecaCom(ATTRAPER_VERRES);
+	  //mecaCom(ATTRAPER_VERRES);
 
 
 	  // On repart
@@ -578,8 +576,8 @@ while(1);}
 	  wait_ms(100);
 
 
-	  mecaCom(FERMER_DROITE);
-	  mecaCom(FERMER_GAUCHE);
+	  //mecaCom(FERMER_DROITE);
+	  //mecaCom(FERMER_GAUCHE);
 
 	  trajectory_goto_arel(&traj, END, -90);
 	  while(!trajectory_is_ended(&traj));
@@ -597,13 +595,13 @@ while(1);}
 	  while(!trajectory_is_ended(&traj));
 	  wait_ms(100);
 
-	  mecaCom(DEPOSER);
+	  //mecaCom(DEPOSER);
 
 	  trajectory_goto_d(&traj, END, -25);
 	  while(!trajectory_is_ended(&traj));
 	  wait_ms(100);
 
-	  mecaCom(ATTRAPER_VERRES);
+	  //mecaCom(ATTRAPER_VERRES);
 
 
 	  trajectory_goto_arel(&traj, END, 180);
@@ -630,13 +628,13 @@ while(1);}
 	  while(!trajectory_is_ended(&traj));
 	  wait_ms(100);
 
-	  mecaCom(DEPOSER);
+	  //mecaCom(DEPOSER);
 
 	  trajectory_goto_d(&traj, END, -25);
 	  while(!trajectory_is_ended(&traj));
 	  wait_ms(100);
 
-	  mecaCom(ATTRAPER_VERRES);
+	  //mecaCom(ATTRAPER_VERRES);
 
 	  trajectory_goto_arel(&traj, END, 180);
 	  while(!trajectory_is_ended(&traj));
@@ -650,7 +648,7 @@ while(1);}
 #ifdef MATCH_2
 	  // Début, mettre la droite du robot en face des verres les plus à droite. 
 
-	  mecaCom(ATTRAPER_VERRES);
+	  //mecaCom(ATTRAPER_VERRES);
 
 	  //Démarrage en douceur
 	  quadramp_set_2nd_order_vars(&asserv.qramp_distance,3,3);
@@ -671,7 +669,7 @@ while(1);}
 
 	  // Distance parcourue : 75
 
-	  //mecaCom(FERMER_DROITE);
+	  ////mecaCom(FERMER_DROITE);
 
 	  // Deviation pour mettre le 2e verre à gauche
 	  trajectory_goto_arel(&traj, END, -8);
@@ -683,7 +681,7 @@ while(1);}
 	  while(!trajectory_is_ended(&traj));
 	  wait_ms(100);
 
-	  //mecaCom(FERMER_GAUCHE);
+	  ////mecaCom(FERMER_GAUCHE);
 
 	  // Déviation dans l'autre sens pour se remettre droit
 	  trajectory_goto_arel(&traj, END, 8);
@@ -705,7 +703,7 @@ while(1);}
 	  while(!trajectory_is_ended(&traj));
 	  wait_ms(100);
 
-	  mecaCom(MONTER_REMPLI);
+	  //mecaCom(MONTER_REMPLI);
 	  wait_ms(2000);
 
 	  // On avance vers notre camp
@@ -723,9 +721,9 @@ while(1);}
 	  AVANCE = 0;
 	  //// Distance parcourue : 100 cm !
 
-	  mecaCom(DESCENDRE_SECURE);
+	  //mecaCom(DESCENDRE_SECURE);
 	  wait_ms(2000);
-	  mecaCom(MONTER_REMPLI);
+	  //mecaCom(MONTER_REMPLI);
 	  wait_ms(2000);
 
 	  // On reculepour laisser les verres DANS NOTRE CAMP DE PREFERRENCE
@@ -735,7 +733,7 @@ while(1);}
 	  wait_ms(100);
 	  RECULE = 0;
 	  
-	  mecaCom(ATTRAPER_VERRES);
+	  //mecaCom(ATTRAPER_VERRES);
 
 
 	  // On se retourne
@@ -764,7 +762,7 @@ while(1);}
 	  while(!trajectory_is_ended(&traj));
 	  wait_ms(100);
 
-	  mecaCom(MONTER_REMPLI);
+	  //mecaCom(MONTER_REMPLI);
 	  wait_ms(2000);
 
 	  // On avance vers notre camp
@@ -781,9 +779,9 @@ while(1);}
 	  AVANCE = 0;
 	  // Distance parcourue : 110 cm !
 
-	  mecaCom(DESCENDRE_SECURE);
+	  //mecaCom(DESCENDRE_SECURE);
 	  wait_ms(2000);
-	  mecaCom(MONTER_REMPLI);
+	  //mecaCom(MONTER_REMPLI);
 	  wait_ms(2000);
 
 
@@ -794,7 +792,7 @@ while(1);}
 	  wait_ms(100);
 	  RECULE = 0;
 
-	  mecaCom(ATTRAPER_VERRES);
+	  //mecaCom(ATTRAPER_VERRES);
 
 
 	  // On repart
@@ -830,8 +828,8 @@ while(1);}
 	  wait_ms(100);
 
 
-	  mecaCom(FERMER_DROITE);
-	  mecaCom(FERMER_GAUCHE);
+	  //mecaCom(FERMER_DROITE);
+	  //mecaCom(FERMER_GAUCHE);
 
 	  trajectory_goto_arel(&traj, END, -90);
 	  while(!trajectory_is_ended(&traj));
@@ -849,13 +847,13 @@ while(1);}
 	  while(!trajectory_is_ended(&traj));
 	  wait_ms(100);
 
-	  mecaCom(DEPOSER);
+	  //mecaCom(DEPOSER);
 
 	  trajectory_goto_d(&traj, END, -25);
 	  while(!trajectory_is_ended(&traj));
 	  wait_ms(100);
 
-	  mecaCom(ATTRAPER_VERRES);
+	  //mecaCom(ATTRAPER_VERRES);
 
 
 	  trajectory_goto_arel(&traj, END, 180);
@@ -882,13 +880,13 @@ while(1);}
 	  while(!trajectory_is_ended(&traj));
 	  wait_ms(100);
 
-	  mecaCom(DEPOSER);
+	  //mecaCom(DEPOSER);
 
 	  trajectory_goto_d(&traj, END, -25);
 	  while(!trajectory_is_ended(&traj));
 	  wait_ms(100);
 
-	  mecaCom(ATTRAPER_VERRES);
+	  //mecaCom(ATTRAPER_VERRES);
 
 	  trajectory_goto_arel(&traj, END, 180);
 	  while(!trajectory_is_ended(&traj));
@@ -941,11 +939,11 @@ while(1);}
 	  nbr_verres = tmp;
 	  printf("Combien de verres en tout ? : %d \n", nbr_verres);
 	  */
-	  mecaCom(DEUX_PILES);
+	  //mecaCom(DEUX_PILES);
 	  while(1){
 	    wait_ms(1000);
-	    printf("\nVerre reçu : %d\n",mecaCom(QUESTION_VERRE_RECUP));
-	    printf("Nb de verres : %d\n",mecaCom(COMBIEN_VERRES));
+	    //printf("\nVerre reçu : %d\n",//mecaCom(QUESTION_VERRE_RECUP));
+	    //printf("Nb de verres : %d\n",//mecaCom(COMBIEN_VERRES));
 	  }
 	  
 
@@ -1151,6 +1149,7 @@ void goto_d_back_detection(trajectory_manager_t * traj, double d){
 	AVANCE=1;
 	RECULE=0;
 }
+/*
 uint8_t mecaCom(uint8_t commande) {//BA2
   return 0;
   I2C_DISPO = 0;
@@ -1168,6 +1167,7 @@ uint8_t mecaCom(uint8_t commande) {//BA2
 	I2C_DISPO = 1;
 	return result;
 }
+*/
 void init_couleur_depart(void)
 {
 	if(PINE&0x80)

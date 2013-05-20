@@ -1,6 +1,6 @@
 #include "strategie.h"
-#include "i2cm.h"
-#include "com.h"
+//#include "i2cm.h"
+//#include "com.h"
 #include "evitement.h"
 
 #include <stdio.h>
